@@ -20,11 +20,11 @@ namespace Prueba_Tecnica.Controllers
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<VillaDto>> GetVilla(int id)
+        public async Task<ActionResult<IEnumerable<VillaDto>>> GetVilla(int id)
         {
 
             _logger.LogInformation("Obtener las villas");
-            return Ok(_db.Villas.ToList());
+            return Ok(await _db.Villas.ToListAsync());
 
         }
 
@@ -33,7 +33,7 @@ namespace Prueba_Tecnica.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult<VillaDto> GetVillaDto(int id)
+        public async Task <ActionResult<VillaDto>> GetVillaDto(int id)
         {
             if (id == 0)
             {
@@ -41,7 +41,7 @@ namespace Prueba_Tecnica.Controllers
                 return BadRequest();
             }
          //   var villa = VillaStore.VillaList.FirstOrDefault(v => v.Id == id);
-         var villa =_db.Villas.FirstOrDefault(v => v.Id == id);
+         var villa =await _db.Villas.FirstOrDefaultAsync(v => v.Id == id);
             if (villa == null)
             {
                 return NotFound("No hay ningún registro con ese ID");
@@ -55,26 +55,26 @@ namespace Prueba_Tecnica.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public ActionResult<VillaDto>CrearVilla([FromBody] VillaDto villaDto)
+        public async Task<ActionResult<VillaDto>> CrearVilla([FromBody] VillaCreateDto villaDto)
 
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if(_db.Villas.FirstOrDefault(v=>v.Nombre.ToLower() == villaDto.Nombre.ToLower()) != null)
+            if (await _db.Villas.FirstOrDefaultAsync(v => v.Nombre.ToLower() == villaDto.Nombre.ToLower()) != null)
             {
                 ModelState.AddModelError("NombreExiste", "La villa con ese Nombre ya Existe");
                 return BadRequest(ModelState);
             }
-            if(villaDto == null)
+            if (villaDto == null)
             {
                 return BadRequest(villaDto);
             }
-            if (villaDto.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            //if (villaDto.Id > 0)
+            //{
+            //    return StatusCode(StatusCodes.Status500InternalServerError);
+            //}
             Villa modelo = new()
             {
                 Nombre = villaDto.Nombre,
@@ -85,9 +85,9 @@ namespace Prueba_Tecnica.Controllers
                 MetrosCuadrados = villaDto.MetrosCuadrados,
                 Amenidad = villaDto.Amenidad
             };
-            _db.Villas.Add(modelo);
-            _db.SaveChanges();
-            return CreatedAtRoute("GetVilla", new {id= villaDto.Id}, villaDto);
+            await _db.Villas.AddAsync(modelo);
+            await _db.SaveChangesAsync();
+            return CreatedAtRoute("GetVilla", new {id= modelo.Id}, modelo);
         }
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -95,26 +95,26 @@ namespace Prueba_Tecnica.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
 
-        public IActionResult DeleteVilla(int id)
+        public async Task <IActionResult> DeleteVilla(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var villa= _db.Villas.FirstOrDefault(V=>V.Id==id);
+            var villa=await _db.Villas.FirstOrDefaultAsync(V=>V.Id==id);
             if (villa != null)
             {
                 return NotFound();
             }
             _db.Villas.Remove(villa);
-            _db.SaveChanges();
+           await _db.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateVilla(int id, [FromBody] VillaDto villaDto)
+        public async Task <IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDto villaDto)
         {
             if(villaDto== null || id!=villaDto.Id)
             {
@@ -139,22 +139,22 @@ namespace Prueba_Tecnica.Controllers
             };
 
         _db.Villas.Update(modelo);
-            _db.SaveChanges();
+          await _db.SaveChangesAsync();
             return NoContent();
         }
         [HttpPatch("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateVilla(int id,JsonPatchDocument<VillaDto> patchDto)
+        public async Task <IActionResult> UpdatePartialVilla(int id,JsonPatchDocument<VillaUpdateDto> patchDto)
         {
             if (patchDto == null || id == 0)
             {
                 return BadRequest();
             }
             //var villa = VillaStore.VillaList.FirstOrDefault(v => v.Id == id);
-            var villa= _db.Villas.AsNoTracking().FirstOrDefault(v=>v.Id==id);
+            var villa=await _db.Villas.AsNoTracking().FirstOrDefaultAsync(v=>v.Id==id);
 
-            VillaDto villaDto = new()
+            VillaUpdateDto villaDto = new()
             {
                 Id = villa.Id,
                 Nombre = villa.Nombre,
@@ -184,7 +184,7 @@ namespace Prueba_Tecnica.Controllers
                 Amenidad = villaDto.Amenidad
             };
             _db.Villas.Update(modelo);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
         }
     }
