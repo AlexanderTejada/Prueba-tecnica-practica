@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Prueba_Tecnica.Datos;
 
@@ -11,9 +12,11 @@ using Prueba_Tecnica.Datos;
 namespace Prueba_Tecnica.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241223114134_RemoveRequiredFromModel")]
+    partial class RemoveRequiredFromModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,31 +24,6 @@ namespace Prueba_Tecnica.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Prueba_Tecnica.Modelos.NumeroVilla", b =>
-                {
-                    b.Property<int>("VillaNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DetalleEspecial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaActualizacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VillaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VillaNo");
-
-                    b.HasIndex("VillaId");
-
-                    b.ToTable("NumeroVillas");
-                });
 
             modelBuilder.Entity("Prueba_Tecnica.Modelos.Villa", b =>
                 {
@@ -96,8 +74,8 @@ namespace Prueba_Tecnica.Migrations
                             Id = 1,
                             Amenidad = "",
                             Detalle = "Detalle de la villa..",
-                            FechaActualizacion = new DateTime(2024, 12, 23, 10, 28, 8, 6, DateTimeKind.Local).AddTicks(9407),
-                            FechaCreacion = new DateTime(2024, 12, 23, 10, 28, 8, 3, DateTimeKind.Local).AddTicks(4129),
+                            FechaActualizacion = new DateTime(2024, 12, 23, 8, 41, 33, 620, DateTimeKind.Local).AddTicks(3514),
+                            FechaCreacion = new DateTime(2024, 12, 23, 8, 41, 33, 617, DateTimeKind.Local).AddTicks(6087),
                             ImageUrl = "",
                             MetrosCuadrados = 50,
                             Nombre = "Villa Real",
@@ -109,25 +87,14 @@ namespace Prueba_Tecnica.Migrations
                             Id = 2,
                             Amenidad = "",
                             Detalle = "Detalle de la villa.",
-                            FechaActualizacion = new DateTime(2024, 12, 23, 10, 28, 8, 6, DateTimeKind.Local).AddTicks(9647),
-                            FechaCreacion = new DateTime(2024, 12, 23, 10, 28, 8, 6, DateTimeKind.Local).AddTicks(9646),
+                            FechaActualizacion = new DateTime(2024, 12, 23, 8, 41, 33, 620, DateTimeKind.Local).AddTicks(3759),
+                            FechaCreacion = new DateTime(2024, 12, 23, 8, 41, 33, 620, DateTimeKind.Local).AddTicks(3757),
                             ImageUrl = "",
                             MetrosCuadrados = 40,
                             Nombre = "Premium Vista a la Piscina",
                             Ocupantes = 4,
                             Tarifa = 150.0
                         });
-                });
-
-            modelBuilder.Entity("Prueba_Tecnica.Modelos.NumeroVilla", b =>
-                {
-                    b.HasOne("Prueba_Tecnica.Modelos.Villa", "Villa")
-                        .WithMany()
-                        .HasForeignKey("VillaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Villa");
                 });
 #pragma warning restore 612, 618
         }

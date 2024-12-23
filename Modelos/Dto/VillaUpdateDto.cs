@@ -20,7 +20,7 @@ namespace Prueba_Tecnica.Modelos.Dto
         public int Ocupantes { get; set; }
         [Required]
         public int MetrosCuadrados { get; set; }
-        [Required]
+       
         public string ImageUrl { get; set; }
 
         public string Amenidad { get; set; }
