@@ -1,0 +1,32 @@
+# Archivos de compilación
+bin/
+obj/
+
+# Archivos de usuario de Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Configuración local
+.vscode/
+.idea/
+.env
+appsettings*.json
+
+# Dependencias de paquetes
+*.nupkg
+*.snupkg
+packages/
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de lock
+project.lock.json
+*.lock.json
+
+# Archivos temporales
+*.tmp
+*.log
