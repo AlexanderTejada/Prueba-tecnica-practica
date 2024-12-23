@@ -13,7 +13,7 @@ namespace Prueba_Tecnica.Modelos.Dto
         public string Detalle { get; set; }
 
         [Required]
-        public double Tarifa { get; set; } // Asegúrate que aquí sea double si en la DB es double
+        public double Tarifa { get; set; } 
         public int Ocupantes { get; set; }
         public int MetrosCuadrados { get; set; }
         public string ImageUrl { get; set; }
